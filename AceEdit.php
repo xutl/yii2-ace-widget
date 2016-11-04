@@ -6,15 +6,26 @@
  */
 namespace xutl\ace;
 
+use yii\base\Widget;
 use yii\helpers\Html;
-use yii\widgets\InputWidget;
 
 /**
  * Class AceEdit
  * @package xutl\ace
  */
-class AceEdit extends InputWidget
+class AceEdit extends Widget
 {
+    /**
+     * @var string the input name. This must be set if [[model]] and [[attribute]] are not set.
+     */
+    public $name;
+
+    /**
+     * @var array the HTML attributes for the input tag.
+     * @see \yii\helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
+     */
+    public $options = [];
+
     /**
      * @var string Programming Language Mode
      */
@@ -40,16 +51,9 @@ class AceEdit extends InputWidget
     public function init()
     {
         parent::init();
-        Html::addCssStyle($this->options, 'display: none');
-        $editorId = $this->getId();
-        $editorVar = 'ace_'.$editorId;
-        $textAreaVar = 'aceTextArea_'.$editorId;
-        $this->containerOptions['id'] = $editorId;
-
-        $this->getView()->registerJs("var {$editorVar} = ace.edit(\"{$editorId}\");{$editorVar}.setTheme(\"ace/theme/{$this->theme}\");{$editorVar}.getSession().setMode(\"ace/mode/{$this->mode}\")");
-        $this->getView()->registerJs("var {$textAreaVar} = $('#{$this->options['id']}').hide();{$editorVar}.getSession().setValue({$textAreaVar}.val());{$editorVar}.getSession().on('change', function(){{$textAreaVar}.val({$editorVar}.getSession().getValue());});");
-        $this->getView()->registerCss("#{$editorId}{position:relative}");
-        AceEditAsset::register($this->view);
+        if (!isset($this->options['id'])) {
+            $this->options['id'] = $this->getId();
+        }
     }
 
     /**
@@ -57,12 +61,16 @@ class AceEdit extends InputWidget
      */
     public function run()
     {
-        $content = Html::tag('div', '', $this->containerOptions);
-        if ($this->hasModel()) {
-            $content .= Html::activeTextarea($this->model, $this->attribute, $this->options);
-        } else {
-            $content .= Html::textarea($this->name, $this->value, $this->options);
-        }
-        return $content;
+        $editorId = $this->containerOptions['id'] = $this->options['id'];
+        //编辑器活动变量
+        $editorVar = 'ace_'.$editorId;
+        $this->getView()->registerJs("
+        var {$editorVar} = ace.edit(\"{$editorId}\");
+            {$editorVar}.setTheme(\"ace/theme/{$this->theme}\");
+            {$editorVar}.getSession().setMode(\"ace/mode/{$this->mode}\");
+        ");
+
+        AceEditAsset::register($this->view);
+        return Html::tag('div', '', $this->containerOptions);
     }
 }
