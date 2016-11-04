@@ -36,5 +36,5 @@ Once the extension is installed, simply use it in your code by  :
             'style'=>'width: 100%; min-height: 400px',
         ]
     ]
-; ?>
+); ?>
 ````
