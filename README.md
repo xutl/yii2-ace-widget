@@ -16,8 +16,25 @@ composer require --prefer-dist xutl/yii2-ace-widget
 
 or add
 
-```json
-"xutl/yii2-ace-widget": "*"
+```
+"xutl/yii2-ace-widget": "~1.0"
 ```
 
 to the `require` section of your `composer.json`.
+
+Usage
+-----
+
+Once the extension is installed, simply use it in your code by  :
+
+```php
+<?= \xutl\ace\AceEdit::widget(
+    [
+        'mode'=>'html',
+        'theme'=>'github',
+        'containerOptions'=>[
+            'style'=>'width: 100%; min-height: 400px',
+        ]
+    ]
+; ?>
+````
