@@ -19,6 +19,7 @@ class AceEditInput extends InputWidget
      * @var string Programming Language Mode
      */
     public $mode = 'html';
+
     /**
      * @var string Editor theme
      * $see Themes List
@@ -40,14 +41,22 @@ class AceEditInput extends InputWidget
     public function init()
     {
         parent::init();
-        Html::addCssStyle($this->options, 'display: none');
+        //编辑器ID
         $editorId = $this->getId();
-        $editorVar = 'ace_'.$editorId;
-        $textAreaVar = 'aceTextArea_'.$editorId;
         $this->containerOptions['id'] = $editorId;
-
-        $this->getView()->registerJs("var {$editorVar} = ace.edit(\"{$editorId}\");{$editorVar}.setTheme(\"ace/theme/{$this->theme}\");{$editorVar}.getSession().setMode(\"ace/mode/{$this->mode}\")");
-        $this->getView()->registerJs("var {$textAreaVar} = $('#{$this->options['id']}').hide();{$editorVar}.getSession().setValue({$textAreaVar}.val());{$editorVar}.getSession().on('change', function(){{$textAreaVar}.val({$editorVar}.getSession().getValue());});");
+        //编辑器实例变量
+        $editorVar = 'ace_'.$editorId;
+        $this->getView()->registerJs("
+        var {$editorVar} = ace.edit(\"{$editorId}\");
+            {$editorVar}.setTheme(\"ace/theme/{$this->theme}\");
+            {$editorVar}.getSession().setMode(\"ace/mode/{$this->mode}\");
+        ");
+        $this->getView()->registerJs("
+        jQuery('#{$this->options['id']}').hide();
+        {$editorVar}.getSession().setValue(jQuery('#{$this->options['id']}').val());
+        {$editorVar}.getSession().on('change', function(){
+            jQuery('#{$this->options['id']}').val({$editorVar}.getSession().getValue());
+        });");
         $this->getView()->registerCss("#{$editorId}{position:relative}");
         AceEditAsset::register($this->view);
     }
