@@ -22,10 +22,10 @@ or add
 
 to the `require` section of your `composer.json`.
 
-Usage
+使用
 -----
 
-Once the extension is installed, simply use it in your code by  :
+一但安装了该扩展，可以使用下面的代码调用编辑器 :
 
 ```php
 <?= \xutl\ace\AceEdit::widget(
@@ -37,4 +37,26 @@ Once the extension is installed, simply use it in your code by  :
         ]
     ]
 ); ?>
+````
+
+在表单中使用
+
+```php
+<?= \xutl\ace\AceEditInput::widget(
+    [
+        'model'=>$model,
+        'attribute'=>$attribute,
+        'mode'=>'html',
+        'theme'=>'github',
+        'containerOptions'=>[
+            'style'=>'width: 100%; min-height: 400px',
+        ]
+    ]
+); ?>
+
+<?= $form->field($model, 'content')->widget(\xutl\ace\AceEditInput::className(),
+        [
+            'mode' => 'text',
+            'theme' => 'chrome'
+        ]); ?>
 ````

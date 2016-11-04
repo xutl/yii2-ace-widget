@@ -10,10 +10,10 @@ use yii\helpers\Html;
 use yii\widgets\InputWidget;
 
 /**
- * Class AceEdit
+ * Class AceEditInput
  * @package xutl\ace
  */
-class AceEdit extends InputWidget
+class AceEditInput extends InputWidget
 {
     /**
      * @var string Programming Language Mode
